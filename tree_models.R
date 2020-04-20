@@ -50,7 +50,7 @@ test_target=df_phy$phy_target[-train_phy]
 # randomforest, uses less variables so mtry should be smaller
 # mtry (number of featuers considered by model): for regression p=p/3
 # mtry (number of featuers considered by model): for classification p=sqrt(p)
-library(randomForest)
+#library(randomForest)
 set.seed(1)
 rf_phy=randomForest(phy_target~.,
                     data=df_phy,
@@ -70,7 +70,7 @@ varImpPlot(rf_phy)
 
 ############################################################
 # boosting
-library(gbm)
+#library(gbm)
 set.seed(1)
 
 # use distribution='gaussian' for regression
@@ -78,7 +78,7 @@ set.seed(1)
 # n.trees option sets number of trees
 # depth sets limit for each tree
 #df_phy$phy_target_bool <- ifelse(df_phy$phy_target=='No',0,1)
-boost_phy=gbm(phy_target~.-phy_target_bool,
+boost_phy=gbm(phy_target~.,
               data=df_phy[train_phy,],
               distribution='multinomial',
               n.trees=5000, 
@@ -92,21 +92,22 @@ plot(boost_phy,i='feat13')
 plot(boost_phy,i='feat14')
 
 # using boosted model for prediction
-test_target_int <- ifelse(test_target=='No',0,1)
 phy_target_boost=predict(boost_phy, 
                          newdata = df_phy[-train_phy,], 
                          n.trees=5000)
-table(phy_target_boost, test_target_int)
+table(phy_target_boost, test_target)
 
 # using different value for shrinkage parameter
-boost_phy_2 = gbm(medv~.,
-                   data=Boston[train,],
-                   distribution='gaussian',
-                   n.trees=5000, 
-                   interaction.depth = 4,
-                   shrinkage = 0.2,
-                   verbose=F)
+boost_phy_2 = gbm(phy_target~.,
+                  data=df_phy[train_phy,],
+                  distribution='multinomial',
+                  n.trees=5000, 
+                  interaction.depth = 4,
+                  shrinkage = 0.2,
+                  verbose=F)
+
 phy_target_boost2=predict(boost_phy_2, 
                          newdata = df_phy[-train_phy,], 
                          n.trees=5000)
-table(phy_target_boost2, test_target_int)
+
+table(phy_target_boost2, test_target)
