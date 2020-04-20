@@ -1,6 +1,8 @@
-library(tidyverse)
 library(mice)
 library(VIM)
+library(randomForest)
+library(gbm)
+library(tidyverse)
 
 # Step 1: Understand the data by studying the reference file “Variables” 
 data <- read.csv("data/PHY_TRAIN.csv");
@@ -40,3 +42,8 @@ data <- complete(tempData)
 na_cols <- apply(is.na(data), 2, sum)
 na_cols[na_cols > 0]
 names(na_cols[na_cols > 0])
+
+
+############
+# Step 5: Trees
+source('tree_models.R', print.eval=TRUE)
