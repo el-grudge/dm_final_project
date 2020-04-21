@@ -1,3 +1,4 @@
+# Step 5: Trees
 # create a new target column, with values 'yes'/'no' instead of 0,1
 # 0,1 are interpreted as integers, creating a regression tree instead of a classification tree
 df_phy <- select(data,-exampleid)
