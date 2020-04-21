@@ -2,7 +2,7 @@
 source('R/libraries.R')
 
 # Step 1: Understand the data by studying the reference file “Variables” 
-data <- read.csv("C:/Users/Sweet/Desktop/Data Mining/Final/dm_final_project/data/PHY_TRAIN.csv");
+data <- read.csv("data/PHY_TRAIN.csv");
 summary(data)
 
 # Step 2: Create missing value indicators for all variables with missing values.  
