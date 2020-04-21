@@ -1,12 +1,15 @@
 library(mice)
 library(VIM)
 library(InformationValue)
+<<<<<<< HEAD
 library(randomForest)
 library(gbm)
 library(tidyverse)
+=======
+>>>>>>> creating_regressions
 
 # Step 1: Understand the data by studying the reference file “Variables” 
-data <- read.csv("data/PHY_TRAIN.csv");
+data <- read.csv("C:/Users/Sweet/Desktop/Data Mining/Final/dm_final_project/data/PHY_TRAIN.csv");
 summary(data)
 
 # Step 2: Create missing value indicators for all variables with missing values.  
@@ -26,7 +29,7 @@ for (i in 1:length(na_cols)){
               max(data[na_cols[i]][!is.na(data[na_cols[i]])])))
 }
 
-# as shown here, feat29 and feat50 could don't have values, and therefore should be dropped
+# as shown here, feat29 and feat55 could don't have values, and therefore should be dropped
 data <- select(data, -feat29, -feat55)
 
 
@@ -35,7 +38,7 @@ data <- select(data, -feat29, -feat55)
 # m = number of imputed datasets to be generated - does not matter here since we are using the mean of the non-na values
 # maxit = number of iterations per dataset - does not matter here since we are using the mean of the non-na values
 # meth = imputation method
-tempData <- mice(data,m=1,maxit=1,meth='mean',seed=500)
+tempData <- mice(data,m=1,maxit=1,method ='mean',seed=500)
 summary(tempData)
 tempData$imp$feat20
 data <- complete(tempData)
