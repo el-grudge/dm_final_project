@@ -8,7 +8,7 @@ df_phy <- select(df_phy, phy_target, everything(), -target)
 set.seed(2)
 train_phy=sample(1:nrow(df_phy), 0.75*nrow(df_phy))
 test_phy=df_phy[-train_phy,]
-test_target=df_phy$phy_target[-train_phy]
+real_target=df_phy$phy_target[-train_phy]
 
 ############################################################
 # Random forest
@@ -21,9 +21,9 @@ rf_phy=randomForest(phy_target~.,
                     subset=train_phy,
                     mtry=sqrt(length(colnames(df_phy))),
                     importance=TRUE)
-phy_target_rf=predict(rf_phy, newdata=df_phy[-train_phy,])
-table(phy_target_rf, test_target)
-(4513+4393)/(4513+1809+1785+4393) # a higher accuracy of 71 %
+predicted_rf=predict(rf_phy, newdata=df_phy[-train_phy,])
+confusion_matrix_rf <- table(predicted_rf, real_target)
+confusion_matrix_rf[1]+confusion_matrix_rf[4]/sum(confusion_matrix_rf) # a higher accuracy of 71 %
 
 # importance to see importance of each variable
 importance(rf_phy)
@@ -38,7 +38,6 @@ set.seed(1)
 # use distribution='bernoulli' for classification
 # n.trees option sets number of trees
 # depth sets limit for each tree
-#df_phy$phy_target_bool <- ifelse(df_phy$phy_target=='No',0,1)
 boost_phy=gbm(phy_target~.,
               data=df_phy[train_phy,],
               distribution='multinomial',
@@ -53,14 +52,14 @@ plot(boost_phy,i='feat13')
 plot(boost_phy,i='feat14')
 
 # using boosted model for prediction
-phy_target_boost=predict(boost_phy, 
+predicted_boost_1=predict(boost_phy, 
                          newdata = df_phy[-train_phy,], 
                          n.trees=100,
                          type='response')
 
-phy_target_boost = colnames(phy_target_boost)[apply(phy_target_boost, 1, which.max)]
-table(phy_target_boost, test_target)
-(4648+4418)/(4648+1786+1650+4416) # slightly better performance of 72.5 %
+predicted_boost_1 = colnames(predicted_boost_1)[apply(predicted_boost_1, 1, which.max)]
+confusion_matrix_boost1 <- table(predicted_boost_1, real_target)
+confusion_matrix_boost1[1]+confusion_matrix_boost1[4]/sum(confusion_matrix_boost1) # slightly better performance of 72.5 %
 
 # using different value for shrinkage parameter
 boost_phy_2 = gbm(phy_target~.,
@@ -71,11 +70,11 @@ boost_phy_2 = gbm(phy_target~.,
                   shrinkage = 0.2,
                   verbose=F)
 
-phy_target_boost2=predict(boost_phy_2, 
+predicted_boost_2=predict(boost_phy_2, 
                          newdata = df_phy[-train_phy,], 
                          n.trees=100,
                          type='response')
 
-phy_target_boost2 = colnames(phy_target_boost2)[apply(phy_target_boost2, 1, which.max)]
-table(phy_target_boost2, test_target)
-(4584+4401)/(4584+1801+1714+4401) # 71.8 % increasing shrinkage parameter has a detrimental effect on performance
+predicted_boost_2 = colnames(predicted_boost_2)[apply(predicted_boost_2, 1, which.max)]
+confusion_matrix_boost2 <- table(predicted_boost_2, real_target)
+confusion_matrix_boost2[1]+confusion_matrix_boost2[4]/sum(confusion_matrix_boost2) # 71.8 % increasing shrinkage parameter has a detrimental effect on performance
