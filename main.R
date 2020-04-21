@@ -83,3 +83,6 @@ sensitivity(testData$target, predicted, threshold = optCutOff) # Sensitivity; % 
 specificity(testData$target, predicted, threshold = optCutOff) # Specificity; % of 0s accurately predicted
 confusionMatrix(testData$target, predicted, threshold = optCutOff) # Confusion Matrix; Col = actuals, Row = predicted
 
+############
+# Step 5: Trees
+source('tree_models.R', print.eval=TRUE)
