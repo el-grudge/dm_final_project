@@ -1,9 +1,9 @@
-# Step 5: Trees
+# Step 5.3: Trees
 # create a new target column, with values 'yes'/'no' instead of 0,1
 # 0,1 are interpreted as integers, creating a regression tree instead of a classification tree
-df_phy <- select(data,-exampleid)
+df_phy <- (data)
 df_phy$phy_target <- factor(ifelse(df_phy$target==0,'No','Yes'))
-df_phy <- select(df_phy, phy_target, everything(), -target)
+df_phy <- dplyr::select(df_phy, phy_target, everything(), -target)
 
 # splitting the datasets to train (75%) & test (25%)
 set.seed(2)
@@ -23,12 +23,10 @@ rf_phy=randomForest(phy_target~.,
                     mtry=sqrt(length(colnames(df_phy))),
                     importance=TRUE)
 predicted_rf=predict(rf_phy, newdata=df_phy[-train_phy,])
-confusion_matrix_rf <- table(predicted_rf, real_target)
-confusion_matrix_rf[1]+confusion_matrix_rf[4]/sum(confusion_matrix_rf) # a higher accuracy of 71 %
+confusionMatrix(real_target, predicted_rf)
 
 # importance to see importance of each variable
-importance(rf_phy)
-
+impFeatures <- data.frame(importance(rf_phy))
 # plotting importance
 varImpPlot(rf_phy)
 ############################################################
@@ -59,8 +57,8 @@ predicted_boost_1=predict(boost_phy,
                          type='response')
 
 predicted_boost_1 = colnames(predicted_boost_1)[apply(predicted_boost_1, 1, which.max)]
-confusion_matrix_boost1 <- table(predicted_boost_1, real_target)
-confusion_matrix_boost1[1]+confusion_matrix_boost1[4]/sum(confusion_matrix_boost1) # slightly better performance of 72.5 %
+predicted_boost_1 <- as.factor(predicted_boost_1)
+confusionMatrix(predicted_boost_1, real_target)
 
 # using different value for shrinkage parameter
 boost_phy_2 = gbm(phy_target~.,
@@ -77,5 +75,5 @@ predicted_boost_2=predict(boost_phy_2,
                          type='response')
 
 predicted_boost_2 = colnames(predicted_boost_2)[apply(predicted_boost_2, 1, which.max)]
-confusion_matrix_boost2 <- table(predicted_boost_2, real_target)
-confusion_matrix_boost2[1]+confusion_matrix_boost2[4]/sum(confusion_matrix_boost2) # 71.8 % increasing shrinkage parameter has a detrimental effect on performance
+predicted_boost_2 <- as.factor(predicted_boost_2)
+confusionMatrix(predicted_boost_2, real_target)

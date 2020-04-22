@@ -1,40 +1,39 @@
-# Step 4 Logistic Regression without interaction
+# Step 5.1 Logistic Regression without interaction
 # Validate if there is target class bias or not
 table(data$target)
-
-# Since there is no target bias, split the data into training and test sets
-target_ones <- data[which(data$target == 1), ] 
-target_zero <- data[which(data$target == 0), ]
-
-set.seed(100)  # set seed for repeatability
-
-# Create training size for both 1 and 0 of 70% target_ones' size
-target_ones_training_rows <- sample(1:nrow(target_ones), 0.75*nrow(target_ones))
-target_zeros_training_rows <- sample(1:nrow(target_zero), 0.75*nrow(target_ones))
-
-# Create training set for 1 and 0
-training_ones <- target_ones[target_ones_training_rows, ]  
-training_zeros <- target_zero[target_zeros_training_rows, ]
-
-# Bind 1 and 0 training set into one data frame
-trainingData <- rbind(training_ones, training_zeros)
-
-# Create test data set into single data frame
-test_ones <- target_ones[-target_ones_training_rows, ]
-test_zeros <- target_zero[-target_zeros_training_rows, ]
-testData <- rbind(test_ones, test_zeros) 
-
-# Create Logistic Regression model with no interactions
-logitMod <- glm(target ~ ., data=trainingData, family=binomial(link="logit"))
-predicted <- plogis(predict(logitMod, testData))
+data$target <- as.factor(data$target)
+split=0.70
+trainIndex <- createDataPartition(data$target, p=split, list=FALSE)
+data_train <- data[ trainIndex,]
+data_test <- data[-trainIndex,]
+summary(data)
+# Create Logistic Regression model with all features
+logitMod <- glm(target ~ ., data=data_train, family=binomial(link="logit"))
+predicted <- plogis(predict(logitMod, data_test))
 
 # Finding optimal cutoff point for classification 
-optCutOff <- optimalCutoff(testData$target, predicted)
+optCutOff <- optimalCutoff(data_test$target, predicted)
 
-# Performing model analysis
-misClassError(testData$target, predicted, threshold = optCutOff) # Misclassification Rate
-plotROC(testData$target, predicted) # Finding ROC Curve and AUC
-Concordance(testData$target, predicted) # Finding concordance
-sensitivity(testData$target, predicted, threshold = optCutOff) # Sensitivity; % of 1s accurately predicted
-specificity(testData$target, predicted, threshold = optCutOff) # Specificity; % of 0s accurately predicted
-confusionMatrix(testData$target, predicted, threshold = optCutOff) # Confusion Matrix; Col = actuals, Row = predicted
+data_test$predTarget <- NA
+data_test$predTarget[predicted < optCutOff] <- 0
+data_test$predTarget[predicted > optCutOff] <- 1
+data_test$predTarget <- as.factor(data_test$predTarget)
+
+# Analyzing model quality
+plotROC(data_test$target, predicted) # Finding ROC Curve and AUC
+confusionMatrix(data_test$predTarget, data_test$target, positive="1")
+
+
+
+vif(logitMod)
+
+#Step 5.2, Logistic regression with 2-way interactions
+
+twoWayMod <-glm(target ~ .*., data = data_train, family=binomial(link = "logit"))
+summary(twoWayMod)
+
+twoWayTest <- glm(target ~ feat13*feat66, data=data_train, family=binomial(link="logit"))
+twoWayPredicted <- plogis(predict(twoWayTest, data_test))
+sensitivity(data_test$target, twoWayPredicted, threshold = optCutOff)
+pR2(twoWayTest)
+summary(twoWayTest)
