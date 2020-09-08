@@ -133,7 +133,7 @@
 # 
 # densityplot(tempData)
 ##########################################################################################################
-# ##########################################################################################################
+# # ##########################################################################################################
 # # DECISION TREE TUTORIAL ISLR
 # 
 # # The tree library
@@ -152,22 +152,22 @@
 # # tree model
 # tree.carseats=tree(High~.-Sales, Carseats)
 # 
-# # lists the variables that are used as internal nodes in the tree, 
-# # the number of terminal nodes, 
+# # lists the variables that are used as internal nodes in the tree,
+# # the number of terminal nodes,
 # # and the (training) error rate.
 # summary(tree.carseats)
 # 
-# # plotting the tree, The argumentpretty=0instructsRto include the category names for any qualitative pre-dictors, 
+# # plotting the tree, The argumentpretty=0instructsRto include the category names for any qualitative pre-dictors,
 # # rather than simply displaying a letter for each category.
 # plot(tree.carseats)
 # text(tree.carseats,pretty=0)
 # 
 # # branch outputs
-# # the split criterion, 
-# # the number of observations in that branch, 
-# # the deviance, 
-# # the overall predictionfor the branch (Yes or No), 
-# # and the fraction of observations in that branchthat take on values of Yes and No. 
+# # the split criterion,
+# # the number of observations in that branch,
+# # the deviance,
+# # the overall predictionfor the branch (Yes or No),
+# # and the fraction of observations in that branchthat take on values of Yes and No.
 # # Branches that lead to terminal nodes areindicated using asterisks.
 # c(tree.carseats) # typing the tree object doesn't work as expected !!!
 # 
@@ -285,6 +285,13 @@
 # plot(boost.boston,i='rm')
 # plot(boost.boston,i='lstat')
 # 
+# names(Boston)
+# hist(Boston$medv,
+#      breaks=15)
+# 
+# hist(yhat.boost,
+#      breaks=15)
+# 
 # # using boosted model for prediction
 # yhat.boost=predict(boost.boston, newdata = Boston[-train,],
 #                    n.trees=5000)
@@ -296,3 +303,47 @@
 # yhat.boost=predict(boost.boston, newdata=Boston[-train,],n.trees=5000)
 # mean((yhat.boost-boston.test)^2)
 # ##########################################################################################################
+# partialPlot(boost.boston, pred.data=Boston[-train,], x.var='lstat')
+# partialPlot(rf.boston, pred.data=Boston[-train,], x.var='lstat')
+# attach(Boston)
+# library(pdp)
+# partial(rf.boston, pred.var = "lstat", plot = TRUE, rug = TRUE)
+# partial(boost.boston, 
+#         pred.var = "lstat", 
+#         plot = TRUE, 
+#         train=Boston, 
+#         n.trees=5000)
+# 
+# partial(boost_phy, 
+#         pred.var = "feat13", 
+#         type='classification',
+#         plot = TRUE, 
+#         train=df_phy, 
+#         n.trees=100)
+# 
+# partial(boost_phy, 
+#         pred.var = "feat63", 
+#         type='classification',
+#         plot = TRUE, 
+#         train=df_phy, 
+#         n.trees=100)
+# 
+# 
+# 
+# 
+# %>%
+#   plotPartial(smooth=TRUE,
+#               train=Boston[train,], 
+#               rug=TRUE,
+#               lwd=2)
+# partial(pred.var = "lat", plot=FALSE, train = ceta_dd_final, n.trees = 2400) %>%
+#   plotPartial(smooth = TRUE, train = ceta_dd_final, rug = TRUE,
+#               lwd = 2, ylab = expression(f(lat)))
+# 
+# gpb
+# 
+# # cat(sprintf("AUC = \"%s\"", ModelMetrics::auc(modelObject=rf_phy, actual = as.numeric(as.character(real_target_rf)), 		 predicted = as.numeric(as.character(predicted_rf)))))
+# # cat(sprintf("AUC = \"%s\"", ModelMetrics::auc(modelObject=rf_phy, actual = as.numeric(as.character(real_target_boost)), predicted = as.numeric(as.character(predict_boost_1)))))
+# # 
+# # ModelMetrics::auc(modelObject=rf_phy, actual = as.numeric(as.character(real_target_rf)), 		 predicted = as.numeric(as.character(predicted_rf)))
+# # ModelMetrics::auc(modelObject=rf_phy, actual = as.numeric(as.character(real_target_boost)), predicted = as.numeric(as.character(predict_boost_1)))

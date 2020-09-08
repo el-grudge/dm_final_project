@@ -38,23 +38,23 @@ Lastly, we performed the same three dataset test using the gradient boosting met
 
 We measured each of our models by using five standard performance measures: confusion matrix, accuracy, true positive rate (or sensitivity), false positive rate and precision.  The definitions of these measurements and the results of our models are listed below.
 
-![alt text](./table1.png)
+![alt text](./images/table1.png)
 
 ### Logistic Regression with no Interactions
 
-![alt text](./table2.png)
+![alt text](./images/table2.png)
 
 ### Logistic Regression with Two-Way Interactions
 
-![alt text](./table3.png)
+![alt text](./images/table3.png)
 
 ### Random Forest
 
-![alt text](./table4.png)
+![alt text](./images/table4.png)
 
 ### Gradient Boosting
 
-![alt text](./table5.png)
+![alt text](./images/table5.png)
 
 ## Model Selection and Reasoning
 
@@ -74,22 +74,22 @@ The process of selecting a model is equal parts art and science.  They are two s
 
 ### ROC Curves for each Model
 
-![alt text](./table6.png)
+![alt text](./images/table6.png)
 
-![alt text](./table7.png)
+![alt text](./images/table7.png)
 
-![alt text](./table8.png)
+![alt text](./images/table8.png)
 
 ### Feature Importance, Ranked by Random Forest Model
 
-![alt text](./table9.png)
+![alt text](./images/table9.png)
 
-![alt text](./table10.png)
+![alt text](./images/table10.png)
 
 ### Optimal number of Trees for Gradient Boosting
 
-![alt text](./table11.png)
+![alt text](./images/table11.png)
 
-![alt text](./table12.png)
+![alt text](./images/table12.png)
 
 

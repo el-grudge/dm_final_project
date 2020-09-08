@@ -35,6 +35,6 @@ optCutOff <- optimalCutoff(testData$target, predicted)
 misClassError(testData$target, predicted, threshold = optCutOff) # Misclassification Rate
 plotROC(testData$target, predicted) # Finding ROC Curve and AUC
 Concordance(testData$target, predicted) # Finding concordance
-sensitivity(testData$target, predicted, threshold = optCutOff) # Sensitivity; % of 1s accurately predicted
-specificity(testData$target, predicted, threshold = optCutOff) # Specificity; % of 0s accurately predicted
-confusionMatrix(testData$target, predicted, threshold = optCutOff) # Confusion Matrix; Col = actuals, Row = predicted
+InformationValue::sensitivity(testData$target, predicted, threshold = optCutOff) # Sensitivity; % of 1s accurately predicted
+InformationValue::specificity(testData$target, predicted, threshold = optCutOff) # Specificity; % of 0s accurately predicted
+InformationValue::confusionMatrix(testData$target, predicted, threshold = optCutOff) # Confusion Matrix; Col = actuals, Row = predicted
